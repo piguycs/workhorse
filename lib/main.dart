@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:workhorse/settings.dart';
 import 'package:workhorse/themes/appTheme.dart' as theme;
+import 'package:workhorse/extras/jsonHandler.dart';
 
 void main() {
+  final db = Database("./assets/data.json");
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
       systemNavigationBarColor: Color(0X161E36FF),
