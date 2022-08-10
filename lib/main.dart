@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:workhorse/pages/pages.dart';
+import "package:workhorse/pages/pages.dart";
 import 'package:workhorse/settings/settings.dart';
 import 'package:workhorse/themes/app_theme.dart' as theme;
+import 'package:workhorse/extras/jsonHandler.dart';
 
 void main() {
+  final db = Database("./assets/data.json");
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
       systemNavigationBarColor: Color.fromARGB(21, 30, 54, 255),
