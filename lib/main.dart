@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:workhorse/settings.dart';
-import 'package:workhorse/themes/appTheme.dart' as theme;
+import 'package:workhorse/pages/pages.dart';
+import 'package:workhorse/settings/settings.dart';
+import 'package:workhorse/themes/app_theme.dart' as theme;
 
 void main() {
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
-      systemNavigationBarColor: Color(0X161E36FF),
+      systemNavigationBarColor: Color.fromARGB(21, 30, 54, 255),
       systemNavigationBarIconBrightness: Brightness.dark,
     ),
   );
@@ -22,8 +23,10 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   static int currpage = 0;
-  static List<String> titleList = ['Today', 'Week', 'Month', 'Paychecks'];
+  static List<String> titleList = ['Work', 'Holidays', 'Paychecks', 'More'];
   String title = titleList[currpage];
+
+  var pages = [const Work(), const Holidays(), const Paychecks(), const More()];
 
   @override
   Widget build(BuildContext context) {
@@ -58,45 +61,50 @@ class _HomePageState extends State<HomePage> {
           ),
           bottomNavigationBar: NavigationBar(
             onDestinationSelected: ((int index) {
-              setState(() {
-                title = titleList[index];
-                currpage = index;
-              });
+              // if it is a second click
+              if (index == currpage) {
+                if (index == 3) {
+                  Navigator.push(context, MaterialPageRoute<void>(
+                    builder: (BuildContext context) {
+                      return const SettingsPage();
+                    },
+                  ));
+                }
+              }
+              // if it is a normal click
+              else {
+                setState(() {
+                  title = titleList[index];
+                  currpage = index;
+                });
+              }
             }),
             selectedIndex: currpage,
             height: 75,
             elevation: 0,
             destinations: const [
               NavigationDestination(
-                icon: Icon(Icons.calendar_view_day),
-                label: 'Today',
+                icon: Icon(Icons.timer_outlined),
+                selectedIcon: Icon(Icons.timer),
+                label: 'Work',
               ),
               NavigationDestination(
-                icon: Icon(Icons.calendar_view_week),
-                label: 'Week',
+                icon: Icon(Icons.holiday_village_outlined),
+                selectedIcon: Icon(Icons.holiday_village),
+                label: 'Holidays',
               ),
               NavigationDestination(
-                icon: Icon(Icons.calendar_view_month),
-                label: 'Month',
-              ),
-              NavigationDestination(
-                icon: Icon(Icons.euro),
+                icon: Icon(Icons.payments_outlined),
+                selectedIcon: Icon(Icons.payments),
                 label: 'Paychecks',
+              ),
+              NavigationDestination(
+                icon: Icon(Icons.more_horiz),
+                label: 'More',
               ),
             ],
           ),
-          body: <Widget>[
-            const Text('Today\'s work'),
-            const Text('Week\'s work'),
-            const Text('Month\'s work'),
-            const Text('Paychecks Recieved'),
-          ][currpage],
-          floatingActionButton: FloatingActionButton.extended(
-            onPressed: (() {}),
-            label: const Text('Start'),
-            icon: const Icon(Icons.timer_outlined),
-            backgroundColor: const Color(0xff7564fb),
-          ),
+          body: pages[currpage],
         );
       }),
     );
